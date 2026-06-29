@@ -175,16 +175,108 @@
   code { background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; font-size: 12px; font-family: 'Courier New', monospace; }
   pre { background: #1e1e2e; color: #cdd6f4; border-radius: var(--radius); padding: 14px 16px; font-size: 12px; overflow-x: auto; margin: 8px 0; font-family: 'Courier New', monospace; line-height: 1.7; }
 
+  /* ── MOBILE NAV ───────────────────────────────────────── */
+  .mobile-topbar {
+    display: none;
+    position: fixed; top: 0; left: 0; right: 0; height: 52px;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    align-items: center; justify-content: space-between;
+    padding: 0 16px; z-index: 200;
+  }
+  .mobile-topbar .logo-text { font-size: 14px; font-weight: 700; color: var(--accent); }
+  .hamburger {
+    background: none; border: none; cursor: pointer; padding: 6px;
+    color: var(--text-sec); display: flex; align-items: center;
+  }
+  .hamburger svg { width: 20px; height: 20px; }
+
+  .bottom-nav {
+    display: none;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--surface); border-top: 1px solid var(--border);
+    z-index: 200; padding: 0 4px env(safe-area-inset-bottom);
+  }
+  .bottom-nav-inner { display: flex; }
+  .bottom-nav-btn {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 3px; padding: 8px 4px;
+    background: none; border: none; cursor: pointer;
+    color: var(--text-muted); font-size: 10px; font-weight: 500;
+    transition: color 0.15s;
+  }
+  .bottom-nav-btn svg { width: 20px; height: 20px; }
+  .bottom-nav-btn.active { color: var(--accent); }
+
+  /* Overlay when sidebar open on mobile */
+  .sidebar-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.4); z-index: 150;
+  }
+  .sidebar-overlay.open { display: block; }
+
   @media (max-width: 768px) {
-    .sidebar { width: 100%; height: auto; position: relative; }
-    .main { margin-left: 0; padding: 16px; }
+    .mobile-topbar { display: flex; }
+    .bottom-nav { display: block; }
+
+    .sidebar {
+      width: 260px; position: fixed; top: 0; left: -280px;
+      height: 100vh; z-index: 180;
+      transition: left 0.25s ease; padding-top: 52px;
+    }
+    .sidebar.open { left: 0; }
+    /* Hide sync footer on mobile — shown in topbar instead */
+    .sidebar-footer { display: none; }
+
+    .main { margin-left: 0; padding: 72px 14px 80px; }
     .form-grid, .form-grid.cols-3 { grid-template-columns: 1fr; }
     .stat-grid { grid-template-columns: 1fr 1fr; }
     .loan-detail-grid { grid-template-columns: 1fr; }
+
+    /* Stack the dashboard two-col into one col */
+    #page-dashboard > div[style*="grid-template-columns"] {
+      display: flex !important; flex-direction: column; gap: 14px;
+    }
+
+    /* Make tables scroll nicely */
+    .table-wrap { -webkit-overflow-scrolling: touch; }
+
+    /* Tighten page header on mobile */
+    .page-header { flex-wrap: wrap; gap: 10px; }
+    .page-header h2 { font-size: 17px; }
+
+    /* Modal fill more screen */
+    .modal { max-width: 100% !important; margin: 0 10px; }
+    .modal-backdrop { padding: 10px; align-items: flex-end; }
+    .modal { border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+
+    /* Stat cards smaller text on tiny screens */
+    .stat-value { font-size: 20px; }
+  }
+
+  @media (max-width: 400px) {
+    .stat-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .stat-card { padding: 14px; }
+    .stat-value { font-size: 17px; }
+    .main { padding: 68px 10px 78px; }
   }
 </style>
 </head>
 <body>
+
+<!-- Mobile top bar -->
+<div class="mobile-topbar">
+  <button class="hamburger" onclick="toggleSidebar()" aria-label="Open menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+  <span class="logo-text">GP Lending</span>
+  <button class="btn btn-ghost" style="padding:6px 10px;font-size:12px;" onclick="syncAll()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+    Sync
+  </button>
+</div>
+
+<!-- Sidebar overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
 <div class="app">
   <!-- Sidebar -->
@@ -352,7 +444,7 @@ Payments:  id | loan_id | borrower_name | date | amount | penalty_applied | inte
           <div>
             <h4>Open Apps Script editor</h4>
             <p>In your Google Sheet, go to <strong>Extensions → Apps Script</strong>. Delete any existing code and paste the script below:</p>
-            <pre id="appsScriptCode">const SHEET_ID = 'YOUR_SHEET_ID_HERE'; // Replace with your sheet ID from the URL
+            <pre id="appsScriptCode">const SHEET_ID = '1w29uB6KqRSpbeeS68qTDfgC5QakpLwY-_SnoLyixpO4'; // Your sheet ID
 
 function doGet(e) {
   const sheet = SpreadsheetApp.openById(SHEET_ID);
@@ -391,7 +483,7 @@ function doPost(e) {
   return ContentService.createTextOutput(JSON.stringify({status:'ok'}))
     .setMimeType(ContentService.MimeType.JSON);
 }</pre>
-            <p style="margin-top:8px;">Replace <code>YOUR_SHEET_ID_HERE</code> with your sheet's ID — it's the long string in the URL between <code>/d/</code> and <code>/edit</code>.</p>
+            <p style="margin-top:8px;">Your Sheet ID (<code>1w29uB6KqRSpbeeS68qTDfgC5QakpLwY-_SnoLyixpO4</code>) is already filled in above. Open your <a href="https://docs.google.com/spreadsheets/d/1w29uB6KqRSpbeeS68qTDfgC5QakpLwY-_SnoLyixpO4/edit" target="_blank" style="color:var(--accent)">Google Sheet</a>, then go to <strong>Extensions → Apps Script</strong> and paste the script.</p>
           </div>
         </div>
 
@@ -467,7 +559,33 @@ function doPost(e) {
     </div>
 
   </main>
-</div>
+</div><!-- /.app -->
+
+<!-- Bottom nav (mobile) -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <button class="bottom-nav-btn active" onclick="showPageMobile('dashboard', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Home
+    </button>
+    <button class="bottom-nav-btn" onclick="showPageMobile('borrowers', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      Borrowers
+    </button>
+    <button class="bottom-nav-btn" onclick="showPageMobile('loans', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Loans
+    </button>
+    <button class="bottom-nav-btn" onclick="showPageMobile('payments', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      Payments
+    </button>
+    <button class="bottom-nav-btn" onclick="showPageMobile('config', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+      Settings
+    </button>
+  </div>
+</nav>
 
 <!-- MODALS -->
 
@@ -575,7 +693,7 @@ function doPost(e) {
 // ── STATE ──────────────────────────────────────────────────────────────────
 let DB = { borrowers: [], loans: [], payments: [] };
 let CFG = {
-  sheetsUrl: '',
+  sheetsUrl: 'https://script.google.com/macros/s/AKfycbxjn6wOKMxJs7XpHOTcY5U5E5FiYTKpvxH-8nMnTEMRffo7WHMoyzMRl3T_j9ntXR-J/exec',
   defaultInterest: 8,
   defaultPenalty: 5,
   defaultTerm: 1,
@@ -595,7 +713,12 @@ function loadLocal() {
   const saved = localStorage.getItem('agLendingDB');
   if (saved) DB = JSON.parse(saved);
   const cfg = localStorage.getItem('agLendingCFG');
-  if (cfg) CFG = { ...CFG, ...JSON.parse(cfg) };
+  if (cfg) {
+    const parsed = JSON.parse(cfg);
+    // Don't overwrite the baked-in URL with an empty saved one
+    if (!parsed.sheetsUrl) delete parsed.sheetsUrl;
+    CFG = { ...CFG, ...parsed };
+  }
 }
 
 function saveLocal() {
@@ -610,6 +733,10 @@ function applyConfig() {
   document.getElementById('payOrder').value = CFG.payOrder;
   document.getElementById('loanInterest').value = CFG.defaultInterest;
   document.getElementById('loanPenalty').value = CFG.defaultPenalty;
+  // If URL is baked in but localStorage doesn't have it yet, save it now
+  if (CFG.sheetsUrl && !localStorage.getItem('agLendingCFG')) {
+    localStorage.setItem('agLendingCFG', JSON.stringify(CFG));
+  }
   updateSyncStatus(CFG.sheetsUrl ? 'connected' : 'offline');
 }
 
@@ -617,8 +744,18 @@ function applyConfig() {
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.bottom-nav-btn').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
   event.currentTarget.classList.add('active');
+  // Sync bottom nav
+  document.querySelectorAll('.bottom-nav-btn').forEach(n => {
+    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'")) {
+      n.classList.add('active');
+    }
+  });
+  // Close sidebar if open on mobile
+  document.querySelector('.sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
   renderAll();
 }
 
@@ -1068,6 +1205,30 @@ function saveDefaults() {
   CFG.payOrder = document.getElementById('payOrder').value;
   localStorage.setItem('agLendingCFG', JSON.stringify(CFG));
   toast('Defaults saved!', 'success');
+}
+
+// ── MOBILE NAV ─────────────────────────────────────────────────────────────
+function toggleSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('open');
+}
+
+function showPageMobile(id, btn) {
+  // Reuse existing showPage logic but handle the event differently
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.bottom-nav-btn').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  // Also sync sidebar highlight
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'")) {
+      n.classList.add('active');
+    }
+  });
+  renderAll();
 }
 
 // ── TOAST ──────────────────────────────────────────────────────────────────
