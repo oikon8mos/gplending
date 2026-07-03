@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GALICIA-PLANTAS Lending Tracker</title>
+<title>GP Lending Tracker</title>
 <style>
   :root {
     --bg: #f4f6f9;
@@ -14,9 +14,12 @@
     --text: #1a1d23;
     --text-sec: #5a6072;
     --text-muted: #8a93a8;
-    --accent: #2563eb;
-    --accent-light: #eff4ff;
-    --accent-dark: #1d4ed8;
+    --gold: #B8952A;
+    --gold-light: #fdf8ee;
+    --gold-dark: #9a7a20;
+    --accent: #B8952A;
+    --accent-light: #fdf8ee;
+    --accent-dark: #9a7a20;
     --success: #16a34a;
     --success-light: #f0fdf4;
     --warning: #d97706;
@@ -32,17 +35,18 @@
 
   /* Layout */
   .app { display: flex; min-height: 100vh; }
-  .sidebar { width: 220px; background: var(--surface); border-right: 1px solid var(--border); padding: 0; display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 10; }
-  .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid var(--border); }
-  .sidebar-logo h1 { font-size: 15px; font-weight: 700; color: var(--accent); letter-spacing: -0.3px; }
-  .sidebar-logo p { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .sidebar { width: 220px; background: #0f0f0f; border-right: 1px solid #2a2a2a; padding: 0; display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 10; }
+  .sidebar-logo { padding: 18px 16px 14px; border-bottom: 1px solid #2a2a2a; display: flex; align-items: center; gap: 10px; }
+  .sidebar-logo svg.logo-icon { width: 32px; height: 32px; flex-shrink: 0; }
+  .sidebar-logo-text h1 { font-size: 14px; font-weight: 700; color: var(--gold); letter-spacing: 0.3px; }
+  .sidebar-logo-text p { font-size: 10px; color: #666; margin-top: 1px; }
   .sidebar-nav { padding: 12px 8px; flex: 1; }
-  .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: var(--radius); cursor: pointer; color: var(--text-sec); font-size: 13px; font-weight: 500; margin-bottom: 2px; transition: all 0.15s; border: none; background: none; width: 100%; text-align: left; }
-  .nav-item:hover { background: var(--bg); color: var(--text); }
-  .nav-item.active { background: var(--accent-light); color: var(--accent); }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: var(--radius); cursor: pointer; color: #888; font-size: 13px; font-weight: 500; margin-bottom: 2px; transition: all 0.15s; border: none; background: none; width: 100%; text-align: left; }
+  .nav-item:hover { background: #1a1a1a; color: #ccc; }
+  .nav-item.active { background: #1e1800; color: var(--gold); }
   .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
-  .sidebar-footer { padding: 12px 8px; border-top: 1px solid var(--border); }
-  .sync-status { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; padding: 8px 10px; }
+  .sidebar-footer { padding: 12px 8px; border-top: 1px solid #2a2a2a; }
+  .sync-status { font-size: 11px; color: #666; display: flex; align-items: center; gap: 6px; padding: 8px 10px; }
   .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); flex-shrink: 0; }
   .sync-dot.offline { background: var(--warning); }
   .sync-dot.error { background: var(--danger); }
@@ -58,8 +62,8 @@
 
   /* Buttons */
   .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: var(--radius); font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid transparent; transition: all 0.15s; }
-  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .btn-primary:hover { background: var(--accent-dark); }
+  .btn-primary { background: var(--gold); color: #fff; border-color: var(--gold); }
+  .btn-primary:hover { background: var(--gold-dark); }
   .btn-ghost { background: transparent; color: var(--text-sec); border-color: var(--border-strong); }
   .btn-ghost:hover { background: var(--bg); color: var(--text); }
   .btn-danger { background: var(--danger-light); color: var(--danger); border-color: #fca5a5; }
@@ -81,7 +85,7 @@
   .stat-card.danger .stat-value { color: var(--danger); }
   .stat-card.success .stat-value { color: var(--success); }
   .stat-card.warning .stat-value { color: var(--warning); }
-  .stat-card.accent .stat-value { color: var(--accent); }
+  .stat-card.accent .stat-value { color: var(--gold); }
 
   /* Table */
   .table-wrap { overflow-x: auto; }
@@ -97,7 +101,7 @@
   .badge-green { background: var(--success-light); color: var(--success); }
   .badge-red { background: var(--danger-light); color: var(--danger); }
   .badge-amber { background: var(--warning-light); color: var(--warning); }
-  .badge-blue { background: var(--accent-light); color: var(--accent); }
+  .badge-gold { background: var(--gold-light); color: var(--gold); }
   .badge-gray { background: var(--bg); color: var(--text-sec); }
 
   /* Forms */
@@ -107,13 +111,13 @@
   .form-group.full { grid-column: 1 / -1; }
   label { font-size: 12px; font-weight: 600; color: var(--text-sec); }
   input, select, textarea { padding: 8px 12px; border: 1px solid var(--border-strong); border-radius: var(--radius); font-size: 13px; color: var(--text); background: var(--surface); width: 100%; outline: none; transition: border 0.15s; font-family: inherit; }
-  input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+  input:focus, select:focus, textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184,149,42,0.12); }
   .form-note { font-size: 11px; color: var(--text-muted); }
 
   /* Modal */
-  .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+  .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
   .modal-backdrop.open { display: flex; }
-  .modal { background: var(--surface); border-radius: var(--radius-lg); width: 100%; max-width: 520px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+  .modal { background: var(--surface); border-radius: var(--radius-lg); width: 100%; max-width: 520px; box-shadow: 0 20px 60px rgba(0,0,0,0.25); }
   .modal-header { padding: 18px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
   .modal-header h3 { font-size: 15px; font-weight: 700; }
   .modal-body { padding: 20px; }
@@ -125,31 +129,25 @@
   .alert { padding: 12px 14px; border-radius: var(--radius); font-size: 13px; margin-bottom: 16px; display: flex; gap: 8px; align-items: flex-start; }
   .alert-warning { background: var(--warning-light); color: var(--warning); border: 1px solid #fcd34d; }
   .alert-danger { background: var(--danger-light); color: var(--danger); border: 1px solid #fca5a5; }
-  .alert-info { background: var(--accent-light); color: var(--accent); border: 1px solid #93c5fd; }
+  .alert-info { background: var(--gold-light); color: var(--gold-dark); border: 1px solid #e8d08a; }
   .alert-success { background: var(--success-light); color: var(--success); border: 1px solid #86efac; }
 
   /* Payment breakdown */
   .pay-breakdown { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; margin-top: 12px; }
-  .pay-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; font-size: 13px; border-bottom: 1px solid var(--border); }
-  .pay-row:last-child { border-bottom: none; font-weight: 600; }
-  .pay-row .label { color: var(--text-sec); }
-  .pay-row .amount { font-weight: 500; }
-  .pay-row .amount.green { color: var(--success); }
-  .pay-row .amount.red { color: var(--danger); }
-  .pay-row .amount.amber { color: var(--warning); }
+  .pay-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 13px; border-bottom: 1px solid var(--border); }
+  .pay-row:last-child { border-bottom: none; font-weight: 700; }
+  .pay-row .lbl { color: var(--text-sec); }
+  .pay-row .amt { font-weight: 500; }
+  .pay-row .amt.green { color: var(--success); }
+  .pay-row .amt.red { color: var(--danger); }
+  .pay-row .amt.amber { color: var(--warning); }
+  .pay-row .amt.gold { color: var(--gold); }
+  .pay-section-divider { height: 1px; background: var(--border-strong); margin: 6px 0; }
+  .pay-section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); padding: 4px 0 2px; }
 
   /* Config page */
   .config-section { margin-bottom: 24px; }
   .config-section h3 { font-size: 13px; font-weight: 700; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
-  .config-field { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
-  .config-field:last-child { border-bottom: none; }
-  .config-field input { max-width: 280px; }
-
-  /* Loan detail */
-  .loan-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
-  .detail-item { }
-  .detail-item .dl { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; color: var(--text-muted); margin-bottom: 3px; }
-  .detail-item .dv { font-size: 14px; font-weight: 600; }
 
   /* Toast */
   .toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 999; display: flex; flex-direction: column; gap: 8px; }
@@ -164,95 +162,70 @@
 
   /* Empty state */
   .empty-state { text-align: center; padding: 48px 20px; color: var(--text-muted); }
-  .empty-state svg { width: 40px; height: 40px; margin-bottom: 12px; opacity: 0.4; }
   .empty-state p { font-size: 13px; }
 
   /* Setup guide */
   .setup-step { display: flex; gap: 14px; margin-bottom: 20px; }
-  .setup-num { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .setup-num { width: 28px; height: 28px; border-radius: 50%; background: var(--gold); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
   .setup-step h4 { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
   .setup-step p { font-size: 12px; color: var(--text-sec); line-height: 1.6; }
   code { background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; font-size: 12px; font-family: 'Courier New', monospace; }
   pre { background: #1e1e2e; color: #cdd6f4; border-radius: var(--radius); padding: 14px 16px; font-size: 12px; overflow-x: auto; margin: 8px 0; font-family: 'Courier New', monospace; line-height: 1.7; }
 
-  /* ── MOBILE NAV ───────────────────────────────────────── */
-  .mobile-topbar {
-    display: none;
-    position: fixed; top: 0; left: 0; right: 0; height: 52px;
-    background: var(--surface); border-bottom: 1px solid var(--border);
-    align-items: center; justify-content: space-between;
-    padding: 0 16px; z-index: 200;
-  }
-  .mobile-topbar .logo-text { font-size: 14px; font-weight: 700; color: var(--accent); }
-  .hamburger {
-    background: none; border: none; cursor: pointer; padding: 6px;
-    color: var(--text-sec); display: flex; align-items: center;
-  }
+  /* ── CALCULATOR PAGE ──────────────────────────────── */
+  .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .calc-scenario { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); }
+  .calc-scenario-header { padding: 14px 18px; display: flex; align-items: center; gap: 10px; }
+  .calc-scenario-header.on-time { background: var(--success-light); border-bottom: 2px solid var(--success); }
+  .calc-scenario-header.overdue { background: var(--danger-light); border-bottom: 2px solid var(--danger); }
+  .calc-scenario-header h4 { font-size: 13px; font-weight: 700; }
+  .calc-scenario-header.on-time h4 { color: var(--success); }
+  .calc-scenario-header.overdue h4 { color: var(--danger); }
+  .calc-scenario-body { padding: 16px 18px; }
+  .calc-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; border-bottom: 1px solid var(--border); }
+  .calc-row:last-child { border-bottom: none; font-weight: 700; font-size: 14px; }
+  .calc-row .calc-lbl { color: var(--text-sec); }
+  .calc-input-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow); margin-bottom: 20px; }
+  .calc-input-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .calc-rule-box { background: #0f0f0f; border-radius: var(--radius); padding: 14px 16px; margin-bottom: 20px; }
+  .calc-rule-box p { font-size: 12px; color: #999; line-height: 1.7; }
+  .calc-rule-box strong { color: var(--gold); }
+  .month-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .month-tab { padding: 4px 10px; border-radius: 99px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--border-strong); background: var(--surface); color: var(--text-sec); transition: all 0.15s; }
+  .month-tab.active { background: var(--gold); color: #fff; border-color: var(--gold); }
+
+  /* ── MOBILE NAV ───────────────────────────────────── */
+  .mobile-topbar { display: none; position: fixed; top: 0; left: 0; right: 0; height: 52px; background: #0f0f0f; border-bottom: 1px solid #2a2a2a; align-items: center; justify-content: space-between; padding: 0 16px; z-index: 200; }
+  .mobile-topbar .logo-text { font-size: 14px; font-weight: 700; color: var(--gold); }
+  .hamburger { background: none; border: none; cursor: pointer; padding: 6px; color: #888; display: flex; align-items: center; }
   .hamburger svg { width: 20px; height: 20px; }
-
-  .bottom-nav {
-    display: none;
-    position: fixed; bottom: 0; left: 0; right: 0;
-    background: var(--surface); border-top: 1px solid var(--border);
-    z-index: 200; padding: 0 4px env(safe-area-inset-bottom);
-  }
+  .bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #0f0f0f; border-top: 1px solid #2a2a2a; z-index: 200; padding: 0 4px env(safe-area-inset-bottom); }
   .bottom-nav-inner { display: flex; }
-  .bottom-nav-btn {
-    flex: 1; display: flex; flex-direction: column; align-items: center;
-    justify-content: center; gap: 3px; padding: 8px 4px;
-    background: none; border: none; cursor: pointer;
-    color: var(--text-muted); font-size: 10px; font-weight: 500;
-    transition: color 0.15s;
-  }
+  .bottom-nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 8px 4px; background: none; border: none; cursor: pointer; color: #666; font-size: 10px; font-weight: 500; transition: color 0.15s; }
   .bottom-nav-btn svg { width: 20px; height: 20px; }
-  .bottom-nav-btn.active { color: var(--accent); }
-
-  /* Overlay when sidebar open on mobile */
-  .sidebar-overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.4); z-index: 150;
-  }
+  .bottom-nav-btn.active { color: var(--gold); }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 150; }
   .sidebar-overlay.open { display: block; }
 
   @media (max-width: 768px) {
     .mobile-topbar { display: flex; }
     .bottom-nav { display: block; }
-
-    .sidebar {
-      width: 260px; position: fixed; top: 0; left: -280px;
-      height: 100vh; z-index: 180;
-      transition: left 0.25s ease; padding-top: 52px;
-    }
+    .sidebar { width: 260px; position: fixed; top: 0; left: -280px; height: 100vh; z-index: 180; transition: left 0.25s ease; padding-top: 52px; }
     .sidebar.open { left: 0; }
-    /* Hide sync footer on mobile — shown in topbar instead */
     .sidebar-footer { display: none; }
-
     .main { margin-left: 0; padding: 72px 14px 80px; }
     .form-grid, .form-grid.cols-3 { grid-template-columns: 1fr; }
     .stat-grid { grid-template-columns: 1fr 1fr; }
-    .loan-detail-grid { grid-template-columns: 1fr; }
-
-    /* Stack the dashboard two-col into one col */
-    #page-dashboard > div[style*="grid-template-columns"] {
-      display: flex !important; flex-direction: column; gap: 14px;
-    }
-
-    /* Make tables scroll nicely */
+    .calc-grid { grid-template-columns: 1fr; }
+    #page-dashboard > div[style*="grid-template-columns"] { display: flex !important; flex-direction: column; gap: 14px; }
     .table-wrap { -webkit-overflow-scrolling: touch; }
-
-    /* Tighten page header on mobile */
     .page-header { flex-wrap: wrap; gap: 10px; }
     .page-header h2 { font-size: 17px; }
-
-    /* Modal fill more screen */
     .modal { max-width: 100% !important; margin: 0 10px; }
     .modal-backdrop { padding: 10px; align-items: flex-end; }
     .modal { border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
-
-    /* Stat cards smaller text on tiny screens */
     .stat-value { font-size: 20px; }
   }
-
   @media (max-width: 400px) {
     .stat-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
     .stat-card { padding: 14px; }
@@ -269,44 +242,56 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
   </button>
   <span class="logo-text">GP Lending</span>
-  <button class="btn btn-ghost" style="padding:6px 10px;font-size:12px;" onclick="syncAll()">
+  <button class="btn btn-ghost" style="padding:6px 10px;font-size:12px;border-color:#333;color:#888;" onclick="syncAll()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
     Sync
   </button>
 </div>
 
-<!-- Sidebar overlay -->
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
 <div class="app">
-  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="sidebar-logo">
-      <h1>GP Lending</h1>
-      <p>GALICIA &amp; PLANTAS Partners</p>
+      <!-- GP Logo SVG (simplified) -->
+      <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="18" stroke="#B8952A" stroke-width="1.8"/>
+        <circle cx="20" cy="20" r="13" stroke="#B8952A" stroke-width="1.4"/>
+        <circle cx="20" cy="20" r="8" stroke="#B8952A" stroke-width="1.2"/>
+        <path d="M20 4 Q20 20 8 28" stroke="#B8952A" stroke-width="1.6" fill="none"/>
+        <path d="M20 4 Q28 12 28 20 Q28 28 20 28" stroke="#B8952A" stroke-width="1.6" fill="none"/>
+      </svg>
+      <div class="sidebar-logo-text">
+        <h1>GP Lending</h1>
+        <p>GALICIA &amp; PLANTAS</p>
+      </div>
     </div>
     <nav class="sidebar-nav">
-      <button class="nav-item active" onclick="showPage('dashboard')">
+      <button class="nav-item active" onclick="showPage('dashboard', this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
         Dashboard
       </button>
-      <button class="nav-item" onclick="showPage('borrowers')">
+      <button class="nav-item" onclick="showPage('borrowers', this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         Borrowers
       </button>
-      <button class="nav-item" onclick="showPage('loans')">
+      <button class="nav-item" onclick="showPage('loans', this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         Loans
       </button>
-      <button class="nav-item" onclick="showPage('payments')">
+      <button class="nav-item" onclick="showPage('payments', this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
         Payments
       </button>
-      <button class="nav-item" onclick="showPage('setup')">
+      <button class="nav-item" onclick="showPage('calculator', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="12" y2="18"/></svg>
+        Calculator
+      </button>
+      <button class="nav-item" onclick="showPage('setup', this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
         Sheets Setup
       </button>
-      <button class="nav-item" onclick="showPage('config')">
+      <button class="nav-item" onclick="showPage('config', this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
         Settings
       </button>
@@ -314,24 +299,20 @@
     <div class="sidebar-footer">
       <div class="sync-status">
         <div class="sync-dot offline" id="syncDot"></div>
-        <span id="syncText">Not connected to Sheets</span>
+        <span id="syncText">Not connected</span>
       </div>
     </div>
   </aside>
 
-  <!-- Main content -->
   <main class="main">
 
     <!-- DASHBOARD -->
     <div class="page active" id="page-dashboard">
       <div class="page-header">
-        <div>
-          <h2>Dashboard</h2>
-          <p id="dashDate"></p>
-        </div>
+        <div><h2>Dashboard</h2><p id="dashDate"></p></div>
         <button class="btn btn-ghost" onclick="syncAll()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-          Sync with Sheets
+          Sync
         </button>
       </div>
       <div class="stat-grid" id="dashStats"></div>
@@ -360,7 +341,7 @@
         <div class="table-wrap">
           <table>
             <thead><tr><th>Name</th><th>Contact</th><th>Address</th><th>Active loans</th><th>Total outstanding</th><th>Actions</th></tr></thead>
-            <tbody id="borrowerTable"><tr><td colspan="6"><div class="empty-state"><p>No borrowers yet. Add one to get started.</p></div></td></tr></tbody>
+            <tbody id="borrowerTable"><tr><td colspan="6"><div class="empty-state"><p>No borrowers yet.</p></div></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -387,7 +368,7 @@
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Borrower</th><th>Principal</th><th>Rate</th><th>Released</th><th>Due date</th><th>Outstanding balance</th><th>Total due now</th><th>Status</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Borrower</th><th>Principal</th><th>Released</th><th>Due date</th><th>Unpaid Interest</th><th>Total due now</th><th>Status</th><th>Actions</th></tr></thead>
             <tbody id="loanTable"></tbody>
           </table>
         </div>
@@ -406,45 +387,83 @@
       <div class="card">
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Date</th><th>Borrower</th><th>Loan</th><th>Payment amount</th><th>→ Penalty</th><th>→ Interest</th><th>→ Principal</th><th>Balance after</th></tr></thead>
+            <thead><tr><th>Date</th><th>Borrower</th><th>Amount paid</th><th>→ Carried interest</th><th>→ Current interest</th><th>→ Principal</th><th>Principal balance</th></tr></thead>
             <tbody id="paymentTable"></tbody>
           </table>
         </div>
       </div>
     </div>
 
+    <!-- CALCULATOR -->
+    <div class="page" id="page-calculator">
+      <div class="page-header">
+        <div><h2>Loan Calculator</h2><p>Show borrowers exactly what they owe — on time or overdue</p></div>
+      </div>
+
+      <div class="calc-rule-box">
+        <p>
+          <strong>On-time:</strong> 8% flat on original principal, per month. &nbsp;|&nbsp;
+          <strong>Overdue:</strong> 10% flat on original principal replaces 8% (not added). &nbsp;|&nbsp;
+          <strong>Payment order:</strong> Carried unpaid interest first → current interest → principal. &nbsp;|&nbsp;
+          <strong>No compounding.</strong> Unpaid interest carries forward as-is.
+        </p>
+      </div>
+
+      <div class="calc-input-card">
+        <h3>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:var(--gold)"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/></svg>
+          Loan details
+        </h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Principal amount (₱)</label>
+            <input type="number" id="calcPrincipal" placeholder="e.g. 5000" step="100" oninput="runCalc()" />
+          </div>
+          <div class="form-group">
+            <label>Months borrowed</label>
+            <div class="month-tabs" id="monthTabs">
+              <button class="month-tab active" onclick="setCalcMonths(1,this)">1 mo</button>
+              <button class="month-tab" onclick="setCalcMonths(2,this)">2 mo</button>
+              <button class="month-tab" onclick="setCalcMonths(3,this)">3 mo</button>
+              <button class="month-tab" onclick="setCalcMonths(6,this)">6 mo</button>
+              <button class="month-tab" onclick="setCalcMonths(12,this)">12 mo</button>
+            </div>
+            <input type="number" id="calcMonths" value="1" min="1" max="60" oninput="runCalc()" style="margin-top:6px;" />
+          </div>
+          <div class="form-group">
+            <label>Overdue months (if late)</label>
+            <input type="number" id="calcOverdueMonths" placeholder="0 = on time" value="0" min="0" oninput="runCalc()" />
+            <span class="form-note">Months past the due date</span>
+          </div>
+          <div class="form-group">
+            <label>Unpaid carried interest (₱)</label>
+            <input type="number" id="calcCarriedInterest" placeholder="0" value="0" min="0" step="1" oninput="runCalc()" />
+            <span class="form-note">Unpaid interest from prior months</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="calc-grid" id="calcResults" style="display:none;"></div>
+    </div>
+
     <!-- SETUP -->
     <div class="page" id="page-setup">
-      <div class="page-header"><div><h2>Google Sheets setup</h2><p>Connect both partners to a shared database in 5 minutes</p></div></div>
+      <div class="page-header"><div><h2>Google Sheets setup</h2><p>Connect both partners to a shared database</p></div></div>
       <div class="card card-body" style="max-width:720px;">
         <div class="alert alert-info" style="margin-bottom:20px;">This uses Google Apps Script as a free backend — no server needed. Both partners access the same Google Sheet in real time.</div>
-
         <div class="setup-step">
           <div class="setup-num">1</div>
           <div>
-            <h4>Create a new Google Sheet</h4>
-            <p>Go to <a href="https://sheets.new" target="_blank" style="color:var(--accent);">sheets.new</a> and create a blank sheet. Name it <strong>"AG Lending Database"</strong>. Share it with your partner's Google account with Editor access.</p>
+            <h4>Open your Google Sheet</h4>
+            <p>Your sheet is already set up: <a href="https://docs.google.com/spreadsheets/d/1w29uB6KqRSpbeeS68qTDfgC5QakpLwY-_SnoLyixpO4/edit" target="_blank" style="color:var(--gold)">GP Lending Database</a>. Confirm it has 3 tabs: <code>Borrowers</code>, <code>Loans</code>, <code>Payments</code>.</p>
           </div>
         </div>
-
         <div class="setup-step">
           <div class="setup-num">2</div>
           <div>
-            <h4>Create the 3 required tabs</h4>
-            <p>At the bottom of the sheet, create 3 tabs named exactly: <code>Borrowers</code>, <code>Loans</code>, <code>Payments</code></p>
-            <p style="margin-top:6px;">Add these headers in row 1 of each tab:</p>
-            <pre>Borrowers: id | name | contact | address | date_added
-Loans:     id | borrower_id | borrower_name | principal | interest_rate | penalty_rate | start_date | due_date | status | notes
-Payments:  id | loan_id | borrower_name | date | amount | penalty_applied | interest_applied | principal_applied | balance_after | notes</pre>
-          </div>
-        </div>
-
-        <div class="setup-step">
-          <div class="setup-num">3</div>
-          <div>
-            <h4>Open Apps Script editor</h4>
-            <p>In your Google Sheet, go to <strong>Extensions → Apps Script</strong>. Delete any existing code and paste the script below:</p>
-            <pre id="appsScriptCode">const SHEET_ID = '1w29uB6KqRSpbeeS68qTDfgC5QakpLwY-_SnoLyixpO4'; // Your sheet ID
+            <h4>Apps Script (paste this)</h4>
+            <p>In your Sheet: <strong>Extensions → Apps Script</strong>. Delete existing code, paste below, then <strong>Deploy → New deployment → Web app → Anyone → Deploy</strong>.</p>
+            <pre>const SHEET_ID = '1w29uB6KqRSpbeeS68qTDfgC5QakpLwY-_SnoLyixpO4';
 
 function doGet(e) {
   const sheet = SpreadsheetApp.openById(SHEET_ID);
@@ -483,39 +502,25 @@ function doPost(e) {
   return ContentService.createTextOutput(JSON.stringify({status:'ok'}))
     .setMimeType(ContentService.MimeType.JSON);
 }</pre>
-            <p style="margin-top:8px;">Your Sheet ID (<code>1w29uB6KqRSpbeeS68qTDfgC5QakpLwY-_SnoLyixpO4</code>) is already filled in above. Open your <a href="https://docs.google.com/spreadsheets/d/1w29uB6KqRSpbeeS68qTDfgC5QakpLwY-_SnoLyixpO4/edit" target="_blank" style="color:var(--accent)">Google Sheet</a>, then go to <strong>Extensions → Apps Script</strong> and paste the script.</p>
           </div>
         </div>
-
         <div class="setup-step">
-          <div class="setup-num">4</div>
+          <div class="setup-num">3</div>
           <div>
-            <h4>Deploy as web app</h4>
-            <p>Click <strong>Deploy → New deployment → Web app</strong>. Set:<br>
-            — Execute as: <strong>Me</strong><br>
-            — Who has access: <strong>Anyone</strong> (so the app can call it without login)<br>
-            Then click <strong>Deploy</strong> and copy the web app URL.</p>
+            <h4>Paste the new URL in Settings</h4>
+            <p>After deploying, copy the web app URL and paste it into <strong>Settings → Apps Script URL</strong>. Both partners use the same URL.</p>
           </div>
         </div>
-
-        <div class="setup-step">
-          <div class="setup-num">5</div>
-          <div>
-            <h4>Paste the URL in Settings</h4>
-            <p>Go to the <strong>Settings</strong> tab in this app and paste the Apps Script web app URL. Click Save. Both you and your partner paste the same URL — you'll both be writing to the same sheet.</p>
-          </div>
-        </div>
-
         <div class="alert alert-warning">
           <span>⚠</span>
-          <span>The Apps Script URL acts as your API key — anyone with it can read/write your data. Keep it private. Don't share it publicly or commit it to a public GitHub repo.</span>
+          <span>Set "Who has access" to <strong>Anyone</strong> (not "Anyone with Google account") — otherwise the app can't reach it without login.</span>
         </div>
       </div>
     </div>
 
-    <!-- CONFIG / SETTINGS -->
+    <!-- CONFIG -->
     <div class="page" id="page-config">
-      <div class="page-header"><div><h2>Settings</h2><p>Configure your lending defaults and Sheets connection</p></div></div>
+      <div class="page-header"><div><h2>Settings</h2><p>Google Sheets connection</p></div></div>
       <div style="max-width:600px;">
         <div class="card card-body" style="margin-bottom:16px;">
           <div class="config-section">
@@ -530,29 +535,13 @@ function doPost(e) {
         </div>
         <div class="card card-body">
           <div class="config-section">
-            <h3>Default loan settings</h3>
-            <div class="form-grid">
-              <div class="form-group">
-                <label>Default interest rate (%/month)</label>
-                <input type="number" id="defaultInterest" value="8" step="0.5" />
-              </div>
-              <div class="form-group">
-                <label>Default penalty rate (%/month)</label>
-                <input type="number" id="defaultPenalty" value="5" step="0.5" />
-              </div>
-              <div class="form-group">
-                <label>Default loan term (months)</label>
-                <input type="number" id="defaultTerm" value="1" />
-              </div>
-              <div class="form-group">
-                <label>Payment application order</label>
-                <select id="payOrder">
-                  <option value="penalty-interest-principal">Penalty → Interest → Principal</option>
-                  <option value="interest-penalty-principal">Interest → Penalty → Principal</option>
-                </select>
-              </div>
-            </div>
-            <button class="btn btn-ghost" style="margin-top:14px;" onclick="saveDefaults()">Save defaults</button>
+            <h3>Interest model (fixed)</h3>
+            <p style="font-size:12px;color:var(--text-sec);line-height:1.7;">
+              • <strong>8%</strong> flat on original principal — on-time payment<br>
+              • <strong>10%</strong> flat on original principal — overdue (replaces 8%, not added)<br>
+              • Payment settles <em>carried interest → current interest → principal</em><br>
+              • No compounding. Unpaid interest carries forward as-is.
+            </p>
           </div>
         </div>
       </div>
@@ -576,9 +565,9 @@ function doPost(e) {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
       Loans
     </button>
-    <button class="bottom-nav-btn" onclick="showPageMobile('payments', this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-      Payments
+    <button class="bottom-nav-btn" onclick="showPageMobile('calculator', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/></svg>
+      Calc
     </button>
     <button class="bottom-nav-btn" onclick="showPageMobile('config', this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
@@ -615,7 +604,7 @@ function doPost(e) {
 
 <!-- Loan modal -->
 <div class="modal-backdrop" id="loanModal">
-  <div class="modal" style="max-width:560px;">
+  <div class="modal" style="max-width:500px;">
     <div class="modal-header">
       <h3>New loan</h3>
       <button class="modal-close" onclick="closeModal('loanModal')">
@@ -629,16 +618,15 @@ function doPost(e) {
           <select id="loanBorrowerId"><option value="">-- Select borrower --</option></select>
         </div>
         <div class="form-group"><label>Principal amount (₱) *</label><input type="number" id="loanPrincipal" placeholder="e.g. 3000" step="100" oninput="updateLoanPreview()" /></div>
-        <div class="form-group"><label>Interest rate (%/month)</label><input type="number" id="loanInterest" value="8" step="0.5" oninput="updateLoanPreview()" /></div>
-        <div class="form-group"><label>Penalty rate (%/month overdue)</label><input type="number" id="loanPenalty" value="5" step="0.5" /></div>
         <div class="form-group"><label>Release date *</label><input type="date" id="loanStart" oninput="updateLoanDue()" /></div>
         <div class="form-group"><label>Due date *</label><input type="date" id="loanDue" /></div>
         <div class="form-group full"><label>Notes</label><input type="text" id="loanNotes" placeholder="Optional notes" /></div>
       </div>
-      <div class="pay-breakdown" id="loanPreview" style="display:none;">
-        <div class="pay-row"><span class="label">Principal</span><span class="amount" id="prevPrincipal">—</span></div>
-        <div class="pay-row"><span class="label">Interest (1 month)</span><span class="amount amber" id="prevInterest">—</span></div>
-        <div class="pay-row"><span class="label">Total due on maturity</span><span class="amount red" id="prevTotal">—</span></div>
+      <div class="pay-breakdown" id="loanPreview" style="display:none;margin-top:12px;">
+        <div class="pay-section-label">On-time repayment (8% flat)</div>
+        <div class="pay-row"><span class="lbl">Principal</span><span class="amt" id="prevPrincipal">—</span></div>
+        <div class="pay-row"><span class="lbl">Interest (8% × 1 month)</span><span class="amt amber" id="prevInterest">—</span></div>
+        <div class="pay-row"><span class="lbl">Total due on maturity</span><span class="amt green" id="prevTotal">—</span></div>
       </div>
     </div>
     <div class="modal-footer">
@@ -650,7 +638,7 @@ function doPost(e) {
 
 <!-- Payment modal -->
 <div class="modal-backdrop" id="paymentModal">
-  <div class="modal" style="max-width:540px;">
+  <div class="modal" style="max-width:520px;">
     <div class="modal-header">
       <h3>Record payment</h3>
       <button class="modal-close" onclick="closeModal('paymentModal')">
@@ -668,15 +656,19 @@ function doPost(e) {
         <div class="form-group full"><label>Notes</label><input type="text" id="payNotes" placeholder="Optional" /></div>
       </div>
       <div class="pay-breakdown" id="payBreakdown" style="display:none;">
-        <div class="pay-row"><span class="label">Outstanding balance</span><span class="amount" id="pbBalance">—</span></div>
-        <div class="pay-row"><span class="label">Accrued interest</span><span class="amount amber" id="pbInterest">—</span></div>
-        <div class="pay-row"><span class="label">Accrued penalty</span><span class="amount red" id="pbPenalty">—</span></div>
-        <div class="pay-row"><span class="label">Total due</span><span class="amount red" id="pbTotalDue">—</span></div>
-        <div style="height:6px;"></div>
-        <div class="pay-row"><span class="label">→ Applied to penalty</span><span class="amount red" id="pbApplyPenalty">—</span></div>
-        <div class="pay-row"><span class="label">→ Applied to interest</span><span class="amount amber" id="pbApplyInterest">—</span></div>
-        <div class="pay-row"><span class="label">→ Applied to principal</span><span class="amount green" id="pbApplyPrincipal">—</span></div>
-        <div class="pay-row"><span class="label">Remaining balance after payment</span><span class="amount red" id="pbBalanceAfter">—</span></div>
+        <div class="pay-section-label">What's owed</div>
+        <div class="pay-row"><span class="lbl">Principal balance</span><span class="amt" id="pbBalance">—</span></div>
+        <div class="pay-row"><span class="lbl">Carried unpaid interest</span><span class="amt amber" id="pbCarried">—</span></div>
+        <div class="pay-row"><span class="lbl">Current month interest (<span id="pbRateLabel">—</span>)</span><span class="amt amber" id="pbInterest">—</span></div>
+        <div class="pay-row"><span class="lbl">Total due</span><span class="amt red" id="pbTotalDue">—</span></div>
+        <div class="pay-section-divider"></div>
+        <div class="pay-section-label">How payment is applied</div>
+        <div class="pay-row"><span class="lbl">→ Carried interest cleared</span><span class="amt amber" id="pbApplyCarried">—</span></div>
+        <div class="pay-row"><span class="lbl">→ Current interest cleared</span><span class="amt amber" id="pbApplyInterest">—</span></div>
+        <div class="pay-row"><span class="lbl">→ Principal reduced</span><span class="amt green" id="pbApplyPrincipal">—</span></div>
+        <div class="pay-section-divider"></div>
+        <div class="pay-row"><span class="lbl">Principal remaining</span><span class="amt" id="pbBalanceAfter">—</span></div>
+        <div class="pay-row"><span class="lbl">Carried interest remaining</span><span class="amt amber" id="pbCarriedAfter">—</span></div>
       </div>
     </div>
     <div class="modal-footer">
@@ -686,21 +678,27 @@ function doPost(e) {
   </div>
 </div>
 
-<!-- Toast container -->
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
-// ── STATE ──────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+// INTEREST MODEL
+// • 8% flat on original principal, on-time (within due date)
+// • 10% flat on original principal, overdue (replaces 8%)
+// • Payment order: carried interest → current interest → principal
+// • No compounding. Unpaid interest carries forward as-is.
+// ══════════════════════════════════════════════════════════════
+
+const RATE_NORMAL  = 0.08; // 8% per month on original principal
+const RATE_OVERDUE = 0.10; // 10% per month on original principal
+
 let DB = { borrowers: [], loans: [], payments: [] };
 let CFG = {
   sheetsUrl: 'https://script.google.com/macros/s/AKfycbxjn6wOKMxJs7XpHOTcY5U5E5FiYTKpvxH-8nMnTEMRffo7WHMoyzMRl3T_j9ntXR-J/exec',
-  defaultInterest: 8,
-  defaultPenalty: 5,
-  defaultTerm: 1,
-  payOrder: 'penalty-interest-principal'
+  defaultTerm: 1
 };
 
-// ── INIT ───────────────────────────────────────────────────────────────────
+// ── INIT ───────────────────────────────────────────────────────
 window.onload = () => {
   loadLocal();
   document.getElementById('dashDate').textContent = new Date().toLocaleDateString('en-PH', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
@@ -710,56 +708,59 @@ window.onload = () => {
 };
 
 function loadLocal() {
-  const saved = localStorage.getItem('agLendingDB');
+  const saved = localStorage.getItem('gpLendingDB');
   if (saved) DB = JSON.parse(saved);
-  const cfg = localStorage.getItem('agLendingCFG');
+  const cfg = localStorage.getItem('gpLendingCFG');
   if (cfg) {
     const parsed = JSON.parse(cfg);
-    // Don't overwrite the baked-in URL with an empty saved one
     if (!parsed.sheetsUrl) delete parsed.sheetsUrl;
     CFG = { ...CFG, ...parsed };
   }
 }
 
-function saveLocal() {
-  localStorage.setItem('agLendingDB', JSON.stringify(DB));
-}
+function saveLocal() { localStorage.setItem('gpLendingDB', JSON.stringify(DB)); }
 
 function applyConfig() {
   document.getElementById('sheetsUrl').value = CFG.sheetsUrl || '';
-  document.getElementById('defaultInterest').value = CFG.defaultInterest;
-  document.getElementById('defaultPenalty').value = CFG.defaultPenalty;
-  document.getElementById('defaultTerm').value = CFG.defaultTerm;
-  document.getElementById('payOrder').value = CFG.payOrder;
-  document.getElementById('loanInterest').value = CFG.defaultInterest;
-  document.getElementById('loanPenalty').value = CFG.defaultPenalty;
-  // If URL is baked in but localStorage doesn't have it yet, save it now
-  if (CFG.sheetsUrl && !localStorage.getItem('agLendingCFG')) {
-    localStorage.setItem('agLendingCFG', JSON.stringify(CFG));
+  if (CFG.sheetsUrl && !localStorage.getItem('gpLendingCFG')) {
+    localStorage.setItem('gpLendingCFG', JSON.stringify(CFG));
   }
   updateSyncStatus(CFG.sheetsUrl ? 'connected' : 'offline');
 }
 
-// ── NAVIGATION ─────────────────────────────────────────────────────────────
-function showPage(id) {
+// ── NAVIGATION ─────────────────────────────────────────────────
+function showPage(id, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.querySelectorAll('.bottom-nav-btn').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
-  event.currentTarget.classList.add('active');
-  // Sync bottom nav
+  if (btn) btn.classList.add('active');
   document.querySelectorAll('.bottom-nav-btn').forEach(n => {
-    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'")) {
-      n.classList.add('active');
-    }
+    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'")) n.classList.add('active');
   });
-  // Close sidebar if open on mobile
   document.querySelector('.sidebar').classList.remove('open');
   document.getElementById('sidebarOverlay').classList.remove('open');
   renderAll();
 }
 
-// ── GOOGLE SHEETS SYNC ─────────────────────────────────────────────────────
+function showPageMobile(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.bottom-nav-btn').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'")) n.classList.add('active');
+  });
+  renderAll();
+}
+
+function toggleSidebar() {
+  document.querySelector('.sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+
+// ── GOOGLE SHEETS ──────────────────────────────────────────────
 function updateSyncStatus(state) {
   const dot = document.getElementById('syncDot');
   const text = document.getElementById('syncText');
@@ -769,142 +770,163 @@ function updateSyncStatus(state) {
 
 async function sheetsGet(tab) {
   if (!CFG.sheetsUrl) return null;
-  const url = `${CFG.sheetsUrl}?tab=${tab}&t=${Date.now()}`;
-  const res = await fetch(url);
+  const res = await fetch(`${CFG.sheetsUrl}?tab=${tab}&t=${Date.now()}`);
   return await res.json();
 }
 
 async function sheetsPost(payload) {
   if (!CFG.sheetsUrl) return;
-  await fetch(CFG.sheetsUrl, {
-    method: 'POST',
-    body: JSON.stringify(payload)
-  });
+  await fetch(CFG.sheetsUrl, { method: 'POST', body: JSON.stringify(payload) });
 }
 
 async function syncAll() {
-  if (!CFG.sheetsUrl) { toast('No Sheets URL configured. Go to Settings.', 'error'); return; }
+  if (!CFG.sheetsUrl) { toast('No Sheets URL. Go to Settings.', 'error'); return; }
   try {
-    toast('Syncing with Google Sheets...');
-    const [borrowers, loans, payments] = await Promise.all([
-      sheetsGet('Borrowers'), sheetsGet('Loans'), sheetsGet('Payments')
-    ]);
-    if (borrowers) DB.borrowers = borrowers.filter(r => r.id);
-    if (loans) DB.loans = loans.filter(r => r.id);
-    if (payments) DB.payments = payments.filter(r => r.id);
-    saveLocal();
-    renderAll();
-    updateSyncStatus('connected');
-    toast('Synced successfully!', 'success');
+    toast('Syncing…');
+    const [b, l, p] = await Promise.all([sheetsGet('Borrowers'), sheetsGet('Loans'), sheetsGet('Payments')]);
+    if (b) DB.borrowers = b.filter(r => r.id);
+    if (l) DB.loans = l.filter(r => r.id);
+    if (p) DB.payments = p.filter(r => r.id);
+    saveLocal(); renderAll(); updateSyncStatus('connected');
+    toast('Synced!', 'success');
   } catch(e) {
     updateSyncStatus('error');
-    toast('Sync failed. Check your Sheets URL in Settings.', 'error');
+    toast('Sync failed. Check Settings.', 'error');
   }
 }
 
-// ── MATH ───────────────────────────────────────────────────────────────────
-function getOutstandingBalance(loanId) {
+// ══════════════════════════════════════════════════════════════
+// CORE MATH — GP interest model
+// ══════════════════════════════════════════════════════════════
+
+function r2(n) { return Math.round(n * 100) / 100; }
+
+/**
+ * Get principal balance (original principal minus all principal paid).
+ */
+function getPrincipalBalance(loanId) {
   const loan = DB.loans.find(l => String(l.id) === String(loanId));
   if (!loan) return 0;
-  const payments = DB.payments.filter(p => String(p.loan_id) === String(loanId));
-  const totalPrincipalPaid = payments.reduce((s, p) => s + Number(p.principal_applied || 0), 0);
-  return Math.max(0, Number(loan.principal) - totalPrincipalPaid);
+  const paid = DB.payments
+    .filter(p => String(p.loan_id) === String(loanId))
+    .reduce((s, p) => s + Number(p.principal_applied || 0), 0);
+  return Math.max(0, r2(Number(loan.principal) - paid));
 }
 
-function getAccruedCharges(loan, asOfDate) {
-  const balance = getOutstandingBalance(loan.id);
-  if (balance <= 0) return { interest: 0, penalty: 0, balance };
+/**
+ * Get total carried (unpaid) interest for a loan.
+ * = sum of interest_billed on all periods minus sum of interest_applied payments.
+ */
+function getCarriedInterest(loanId) {
+  const pmts = DB.payments.filter(p => String(p.loan_id) === String(loanId));
+  const totalCarriedApplied = pmts.reduce((s, p) => s + Number(p.carried_applied || 0), 0);
+  const totalCurrentApplied = pmts.reduce((s, p) => s + Number(p.interest_applied || 0), 0);
+  const totalBilled = pmts.reduce((s, p) => s + Number(p.interest_billed || 0), 0);
+  // carried after = billed - (carried_applied + current_applied) from prior payments
+  // Simpler: track carried_after on each payment, use latest
+  if (pmts.length === 0) return 0;
+  const sorted = [...pmts].sort((a, b) => a.date > b.date ? 1 : -1);
+  return Math.max(0, Number(sorted[sorted.length - 1].carried_after || 0));
+}
 
-  const due = new Date(loan.due_date);
+/**
+ * Compute what's owed right now for a given loan, as of asOfDate.
+ * Returns { principalBalance, carriedInterest, currentInterest, rate, isOverdue, totalDue }
+ */
+function computeCharges(loan, asOfDate) {
   const asOf = asOfDate ? new Date(asOfDate) : new Date();
-  const ir = Number(loan.interest_rate) / 100;
-  const pr = Number(loan.penalty_rate) / 100;
+  const due  = new Date(loan.due_date);
+  const principalBalance = getPrincipalBalance(loan.id);
+  const carriedInterest  = getCarriedInterest(loan.id);
+  const original = Number(loan.principal);
 
-  // Months elapsed since due date (overdue months)
-  const msPerMonth = 30.44 * 24 * 3600 * 1000;
-
-  // Count total months from start to now for interest
-  const start = new Date(loan.start_date);
-  const totalMonths = Math.max(1, Math.ceil((asOf - start) / msPerMonth));
-  const interest = balance * ir * totalMonths;
-
-  // Overdue months for penalty
-  let penalty = 0;
-  if (asOf > due) {
-    const overdueMonths = Math.ceil((asOf - due) / msPerMonth);
-    penalty = balance * pr * overdueMonths;
+  if (principalBalance <= 0) {
+    return { principalBalance: 0, carriedInterest, currentInterest: 0, rate: 0, isOverdue: false, totalDue: carriedInterest };
   }
 
-  return { interest: Math.round(interest * 100) / 100, penalty: Math.round(penalty * 100) / 100, balance };
+  const isOverdue = asOf > due;
+  const rate = isOverdue ? RATE_OVERDUE : RATE_NORMAL;
+  // Interest is always on ORIGINAL principal, flat
+  const currentInterest = r2(original * rate);
+  const totalDue = r2(principalBalance + carriedInterest + currentInterest);
+
+  return { principalBalance, carriedInterest, currentInterest, rate, isOverdue, totalDue };
 }
 
-function applyPayment(amount, balance, interest, penalty, order) {
+/**
+ * Apply a payment. Order: carried interest → current interest → principal.
+ * Returns { carriedApplied, interestApplied, principalApplied, interestBilled, carriedAfter, balanceAfter }
+ */
+function applyPaymentGP(amount, principalBalance, carriedInterest, currentInterest) {
   let rem = amount;
-  let applied = { penalty: 0, interest: 0, principal: 0 };
-  const seq = order === 'interest-penalty-principal'
-    ? ['interest','penalty','principal']
-    : ['penalty','interest','principal'];
+  const interestBilled = currentInterest;
 
-  const pool = { penalty, interest, principal: balance };
-  for (const key of seq) {
-    const take = Math.min(rem, pool[key]);
-    applied[key] = Math.round(take * 100) / 100;
-    rem = Math.round((rem - take) * 100) / 100;
-    if (rem <= 0) break;
-  }
-  return applied;
+  // 1. Settle carried interest first
+  const carriedApplied = r2(Math.min(rem, carriedInterest));
+  rem = r2(rem - carriedApplied);
+
+  // 2. Settle current interest
+  const interestApplied = r2(Math.min(rem, currentInterest));
+  rem = r2(rem - interestApplied);
+
+  // 3. Remaining goes to principal
+  const principalApplied = r2(Math.min(rem, principalBalance));
+
+  const balanceAfter  = r2(Math.max(0, principalBalance - principalApplied));
+  // Any current interest not paid carries forward (added to existing carried)
+  const carriedAfter  = r2(Math.max(0, (carriedInterest - carriedApplied) + (currentInterest - interestApplied)));
+
+  return { carriedApplied, interestApplied, principalApplied, interestBilled, carriedAfter, balanceAfter };
 }
 
 function getLoanStatus(loan) {
-  const balance = getOutstandingBalance(loan.id);
-  if (balance <= 0) return 'closed';
+  const b = getPrincipalBalance(loan.id);
+  if (b <= 0 && getCarriedInterest(loan.id) <= 0) return 'closed';
   if (new Date() > new Date(loan.due_date)) return 'overdue';
   return 'active';
 }
 
 function getTotalDue(loan) {
-  const { interest, penalty, balance } = getAccruedCharges(loan);
-  return Math.round((balance + interest + penalty) * 100) / 100;
+  const c = computeCharges(loan);
+  return c.totalDue;
 }
 
-// ── RENDER ─────────────────────────────────────────────────────────────────
+// ── RENDER ─────────────────────────────────────────────────────
 function renderAll() {
   renderDashboard();
   renderBorrowers();
   renderLoans();
   renderPayments();
   populateLoanDropdowns();
+  runCalc();
 }
 
 function peso(n) {
-  return '₱' + Number(n).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return '₱' + Number(n || 0).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 function renderDashboard() {
-  const activeLoans = DB.loans.filter(l => getLoanStatus(l) === 'active');
+  const activeLoans  = DB.loans.filter(l => getLoanStatus(l) === 'active');
   const overdueLoans = DB.loans.filter(l => getLoanStatus(l) === 'overdue');
-  const totalOutstanding = DB.loans.filter(l => getLoanStatus(l) !== 'closed')
-    .reduce((s, l) => s + getTotalDue(l), 0);
-  const totalCollected = DB.payments.reduce((s, p) => s + Number(p.amount || 0), 0);
+  const totalOutstanding = DB.loans.filter(l => getLoanStatus(l) !== 'closed').reduce((s, l) => s + getTotalDue(l), 0);
+  const totalCollected   = DB.payments.reduce((s, p) => s + Number(p.amount || 0), 0);
 
   document.getElementById('dashStats').innerHTML = `
     <div class="stat-card accent"><div class="stat-label">Active loans</div><div class="stat-value">${activeLoans.length}</div><div class="stat-sub">${DB.borrowers.length} total borrowers</div></div>
     <div class="stat-card danger"><div class="stat-label">Overdue</div><div class="stat-value">${overdueLoans.length}</div><div class="stat-sub">loans past due date</div></div>
-    <div class="stat-card warning"><div class="stat-label">Total outstanding</div><div class="stat-value" style="font-size:18px">${peso(totalOutstanding)}</div><div class="stat-sub">principal + interest + penalty</div></div>
+    <div class="stat-card warning"><div class="stat-label">Total outstanding</div><div class="stat-value" style="font-size:18px">${peso(totalOutstanding)}</div><div class="stat-sub">principal + all interest</div></div>
     <div class="stat-card success"><div class="stat-label">Total collected</div><div class="stat-value" style="font-size:18px">${peso(totalCollected)}</div><div class="stat-sub">all payments received</div></div>
   `;
 
-  // Overdue table
   const ot = document.getElementById('overdueTable');
   if (overdueLoans.length === 0) {
-    ot.innerHTML = '<div class="empty-state" style="padding:24px"><p>No overdue loans</p></div>';
+    ot.innerHTML = '<div class="empty-state" style="padding:24px"><p>No overdue loans ✓</p></div>';
   } else {
     ot.innerHTML = `<table><thead><tr><th>Borrower</th><th>Due date</th><th>Total due</th></tr></thead><tbody>
       ${overdueLoans.map(l => `<tr class="overdue"><td>${l.borrower_name}</td><td>${l.due_date}</td><td style="color:var(--danger);font-weight:600">${peso(getTotalDue(l))}</td></tr>`).join('')}
     </tbody></table>`;
   }
 
-  // Recent payments
   const rp = document.getElementById('recentPayments');
   const recent = [...DB.payments].reverse().slice(0, 6);
   if (recent.length === 0) {
@@ -918,17 +940,14 @@ function renderDashboard() {
 
 function renderBorrowers() {
   const tbody = document.getElementById('borrowerTable');
-  if (DB.borrowers.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><p>No borrowers yet.</p></div></td></tr>';
-    return;
+  if (!DB.borrowers.length) {
+    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><p>No borrowers yet.</p></div></td></tr>'; return;
   }
   tbody.innerHTML = DB.borrowers.map(b => {
     const bLoans = DB.loans.filter(l => String(l.borrower_id) === String(b.id) && getLoanStatus(l) !== 'closed');
     const outstanding = bLoans.reduce((s, l) => s + getTotalDue(l), 0);
     return `<tr>
-      <td><strong>${b.name}</strong></td>
-      <td>${b.contact || '—'}</td>
-      <td>${b.address || '—'}</td>
+      <td><strong>${b.name}</strong></td><td>${b.contact || '—'}</td><td>${b.address || '—'}</td>
       <td>${bLoans.length}</td>
       <td>${outstanding > 0 ? `<span style="color:var(--danger);font-weight:600">${peso(outstanding)}</span>` : '<span style="color:var(--success)">—</span>'}</td>
       <td><div class="td-actions">
@@ -943,23 +962,21 @@ function renderLoans() {
   const filter = document.getElementById('loanFilter')?.value || 'all';
   const tbody = document.getElementById('loanTable');
   const filtered = DB.loans.filter(l => filter === 'all' || getLoanStatus(l) === filter);
-  if (filtered.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="9"><div class="empty-state"><p>No loans found.</p></div></td></tr>';
-    return;
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><p>No loans found.</p></div></td></tr>'; return;
   }
   tbody.innerHTML = filtered.map(l => {
     const status = getLoanStatus(l);
-    const { balance } = getAccruedCharges(l);
-    const totalDue = getTotalDue(l);
-    const badgeClass = status === 'active' ? 'badge-blue' : status === 'overdue' ? 'badge-red' : 'badge-gray';
+    const { principalBalance, carriedInterest, currentInterest, isOverdue, totalDue } = computeCharges(l);
+    const badgeClass = status === 'active' ? 'badge-gold' : status === 'overdue' ? 'badge-red' : 'badge-gray';
+    const rateLabel = isOverdue ? '10%' : '8%';
     return `<tr class="${status === 'overdue' ? 'overdue' : ''}">
       <td><strong>${l.borrower_name}</strong></td>
       <td>${peso(l.principal)}</td>
-      <td>${l.interest_rate}% / mo</td>
       <td>${l.start_date}</td>
       <td>${l.due_date}</td>
-      <td>${peso(balance)}</td>
-      <td>${status !== 'closed' ? `<strong style="color:var(--danger)">${peso(totalDue)}</strong>` : '<span style="color:var(--success)">Paid</span>'}</td>
+      <td>${carriedInterest > 0 ? `<span style="color:var(--warning);font-weight:600">${peso(carriedInterest)}</span>` : '—'}</td>
+      <td>${status !== 'closed' ? `<strong style="color:var(--danger)">${peso(totalDue)}</strong>` : '<span style="color:var(--success)">Fully settled</span>'}</td>
       <td><span class="badge ${badgeClass}">${status}</span></td>
       <td><div class="td-actions">
         <button class="btn btn-success" style="padding:5px 10px;font-size:12px" onclick="quickPayLoan('${l.id}')">Pay</button>
@@ -971,16 +988,14 @@ function renderLoans() {
 
 function renderPayments() {
   const tbody = document.getElementById('paymentTable');
-  if (DB.payments.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><p>No payments recorded yet.</p></div></td></tr>';
-    return;
+  if (!DB.payments.length) {
+    tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><p>No payments yet.</p></div></td></tr>'; return;
   }
   tbody.innerHTML = [...DB.payments].reverse().map(p => `<tr>
     <td>${p.date}</td>
     <td>${p.borrower_name}</td>
-    <td>#${p.loan_id}</td>
     <td><strong>${peso(p.amount)}</strong></td>
-    <td style="color:var(--danger)">${peso(p.penalty_applied || 0)}</td>
+    <td style="color:var(--warning)">${peso(p.carried_applied || 0)}</td>
     <td style="color:var(--warning)">${peso(p.interest_applied || 0)}</td>
     <td style="color:var(--success)">${peso(p.principal_applied || 0)}</td>
     <td>${peso(p.balance_after)}</td>
@@ -990,18 +1005,16 @@ function renderPayments() {
 function populateLoanDropdowns() {
   const bs = document.getElementById('loanBorrowerId');
   const ls = document.getElementById('payLoanId');
-  if (bs) {
-    bs.innerHTML = '<option value="">-- Select borrower --</option>' +
-      DB.borrowers.map(b => `<option value="${b.id}">${b.name}</option>`).join('');
-  }
+  if (bs) bs.innerHTML = '<option value="">-- Select borrower --</option>' +
+    DB.borrowers.map(b => `<option value="${b.id}">${b.name}</option>`).join('');
   if (ls) {
-    const activeLoans = DB.loans.filter(l => getLoanStatus(l) !== 'closed');
+    const active = DB.loans.filter(l => getLoanStatus(l) !== 'closed');
     ls.innerHTML = '<option value="">-- Select loan --</option>' +
-      activeLoans.map(l => `<option value="${l.id}">${l.borrower_name} — ${peso(l.principal)} (due ${l.due_date})</option>`).join('');
+      active.map(l => `<option value="${l.id}">${l.borrower_name} — ${peso(l.principal)} (due ${l.due_date})</option>`).join('');
   }
 }
 
-// ── BORROWER CRUD ──────────────────────────────────────────────────────────
+// ── BORROWER CRUD ──────────────────────────────────────────────
 function openModal(id) { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
@@ -1010,8 +1023,7 @@ function saveBorrower() {
   if (!name) { toast('Name is required', 'error'); return; }
   const id = document.getElementById('borrowerId').value || Date.now().toString();
   const existing = DB.borrowers.findIndex(b => String(b.id) === String(id));
-  const rec = {
-    id, name,
+  const rec = { id, name,
     contact: document.getElementById('borrowerContact').value.trim(),
     address: document.getElementById('borrowerAddress').value.trim(),
     date_added: existing >= 0 ? DB.borrowers[existing].date_added : new Date().toISOString().slice(0,10)
@@ -1025,10 +1037,7 @@ function saveBorrower() {
   }
   saveLocal(); renderAll(); closeModal('borrowerModal');
   toast('Borrower saved!', 'success');
-  document.getElementById('borrowerId').value = '';
-  document.getElementById('borrowerName').value = '';
-  document.getElementById('borrowerContact').value = '';
-  document.getElementById('borrowerAddress').value = '';
+  ['borrowerId','borrowerName','borrowerContact','borrowerAddress'].forEach(id => document.getElementById(id).value = '');
 }
 
 function editBorrower(id) {
@@ -1042,28 +1051,27 @@ function editBorrower(id) {
 }
 
 function deleteBorrower(id) {
-  if (!confirm('Delete this borrower? Their loans will also be removed.')) return;
+  if (!confirm('Delete this borrower and their loans?')) return;
   DB.borrowers = DB.borrowers.filter(b => String(b.id) !== String(id));
   DB.loans = DB.loans.filter(l => String(l.borrower_id) !== String(id));
   sheetsPost({ tab:'Borrowers', action:'delete', id });
   saveLocal(); renderAll(); toast('Borrower deleted.');
 }
 
-// ── LOAN CRUD ──────────────────────────────────────────────────────────────
+// ── LOAN CRUD ──────────────────────────────────────────────────
 function updateLoanDue() {
   const start = document.getElementById('loanStart').value;
   if (!start) return;
   const d = new Date(start);
-  d.setMonth(d.getMonth() + Number(CFG.defaultTerm));
+  d.setMonth(d.getMonth() + Number(CFG.defaultTerm || 1));
   document.getElementById('loanDue').value = d.toISOString().slice(0,10);
   updateLoanPreview();
 }
 
 function updateLoanPreview() {
   const p = Number(document.getElementById('loanPrincipal').value);
-  const ir = Number(document.getElementById('loanInterest').value) / 100;
-  if (!p || !ir) { document.getElementById('loanPreview').style.display = 'none'; return; }
-  const interest = p * ir;
+  if (!p) { document.getElementById('loanPreview').style.display = 'none'; return; }
+  const interest = r2(p * RATE_NORMAL);
   document.getElementById('prevPrincipal').textContent = peso(p);
   document.getElementById('prevInterest').textContent = peso(interest);
   document.getElementById('prevTotal').textContent = peso(p + interest);
@@ -1072,22 +1080,18 @@ function updateLoanPreview() {
 
 function saveLoan() {
   const borrowerId = document.getElementById('loanBorrowerId').value;
-  const principal = document.getElementById('loanPrincipal').value;
-  const start = document.getElementById('loanStart').value;
-  const due = document.getElementById('loanDue').value;
-  if (!borrowerId || !principal || !start || !due) { toast('Please fill all required fields', 'error'); return; }
+  const principal  = document.getElementById('loanPrincipal').value;
+  const start      = document.getElementById('loanStart').value;
+  const due        = document.getElementById('loanDue').value;
+  if (!borrowerId || !principal || !start || !due) { toast('Fill all required fields', 'error'); return; }
   const borrower = DB.borrowers.find(b => String(b.id) === String(borrowerId));
   const id = Date.now().toString();
-  const rec = {
-    id, borrower_id: borrowerId, borrower_name: borrower.name,
-    principal: Number(principal),
-    interest_rate: Number(document.getElementById('loanInterest').value),
-    penalty_rate: Number(document.getElementById('loanPenalty').value),
-    start_date: start, due_date: due, status: 'active',
-    notes: document.getElementById('loanNotes').value
+  const rec = { id, borrower_id: borrowerId, borrower_name: borrower.name,
+    principal: Number(principal), start_date: start, due_date: due,
+    status: 'active', notes: document.getElementById('loanNotes').value
   };
   DB.loans.push(rec);
-  sheetsPost({ tab:'Loans', action:'append', row:[id, borrowerId, borrower.name, rec.principal, rec.interest_rate, rec.penalty_rate, start, due, 'active', rec.notes] });
+  sheetsPost({ tab:'Loans', action:'append', row:[id, borrowerId, borrower.name, rec.principal, start, due, 'active', rec.notes] });
   saveLocal(); renderAll(); closeModal('loanModal');
   toast('Loan released!', 'success');
 }
@@ -1100,10 +1104,12 @@ function deleteLoan(id) {
   saveLocal(); renderAll(); toast('Loan deleted.');
 }
 
-// ── PAYMENT ────────────────────────────────────────────────────────────────
+// ── PAYMENT ────────────────────────────────────────────────────
 function openPaymentModal() {
   populateLoanDropdowns();
   document.getElementById('payDate').value = new Date().toISOString().slice(0,10);
+  document.getElementById('payBreakdown').style.display = 'none';
+  document.getElementById('payAmount').value = '';
   openModal('paymentModal');
 }
 
@@ -1117,72 +1123,77 @@ function quickPayLoan(loanId) {
 
 function loadLoanForPayment() {
   document.getElementById('payAmount').value = '';
-  document.getElementById('payBreakdown').style.display = 'none';
   computePaymentBreakdown();
 }
 
 function computePaymentBreakdown() {
-  const loanId = document.getElementById('payLoanId').value;
-  const amount = Number(document.getElementById('payAmount').value);
+  const loanId  = document.getElementById('payLoanId').value;
+  const amount  = Number(document.getElementById('payAmount').value);
   const payDate = document.getElementById('payDate').value;
-  if (!loanId) return;
+  if (!loanId) { document.getElementById('payBreakdown').style.display = 'none'; return; }
   const loan = DB.loans.find(l => String(l.id) === String(loanId));
   if (!loan) return;
 
-  const { interest, penalty, balance } = getAccruedCharges(loan, payDate);
-  const totalDue = balance + interest + penalty;
+  const { principalBalance, carriedInterest, currentInterest, rate, isOverdue, totalDue } = computeCharges(loan, payDate);
+  const rateLabel = (rate * 100).toFixed(0) + '% on ₱' + Number(loan.principal).toLocaleString();
 
-  document.getElementById('pbBalance').textContent = peso(balance);
-  document.getElementById('pbInterest').textContent = peso(interest);
-  document.getElementById('pbPenalty').textContent = peso(penalty);
-  document.getElementById('pbTotalDue').textContent = peso(totalDue);
+  document.getElementById('pbBalance').textContent    = peso(principalBalance);
+  document.getElementById('pbCarried').textContent    = peso(carriedInterest);
+  document.getElementById('pbInterest').textContent   = peso(currentInterest);
+  document.getElementById('pbRateLabel').textContent  = rateLabel;
+  document.getElementById('pbTotalDue').textContent   = peso(totalDue);
   document.getElementById('payBreakdown').style.display = 'block';
 
   if (!amount) {
-    document.getElementById('pbApplyPenalty').textContent = '—';
-    document.getElementById('pbApplyInterest').textContent = '—';
-    document.getElementById('pbApplyPrincipal').textContent = '—';
-    document.getElementById('pbBalanceAfter').textContent = '—';
+    ['pbApplyCarried','pbApplyInterest','pbApplyPrincipal','pbBalanceAfter','pbCarriedAfter']
+      .forEach(id => document.getElementById(id).textContent = '—');
     return;
   }
 
-  const applied = applyPayment(amount, balance, interest, penalty, CFG.payOrder);
-  const balanceAfter = Math.max(0, Math.round((balance - applied.principal) * 100) / 100);
-
-  document.getElementById('pbApplyPenalty').textContent = peso(applied.penalty);
-  document.getElementById('pbApplyInterest').textContent = peso(applied.interest);
-  document.getElementById('pbApplyPrincipal').textContent = peso(applied.principal);
-  document.getElementById('pbBalanceAfter').textContent = peso(balanceAfter);
+  const applied = applyPaymentGP(amount, principalBalance, carriedInterest, currentInterest);
+  document.getElementById('pbApplyCarried').textContent   = peso(applied.carriedApplied);
+  document.getElementById('pbApplyInterest').textContent  = peso(applied.interestApplied);
+  document.getElementById('pbApplyPrincipal').textContent = peso(applied.principalApplied);
+  document.getElementById('pbBalanceAfter').textContent   = peso(applied.balanceAfter);
+  document.getElementById('pbCarriedAfter').textContent   = peso(applied.carriedAfter);
 }
 
 function savePayment() {
-  const loanId = document.getElementById('payLoanId').value;
-  const amount = Number(document.getElementById('payAmount').value);
+  const loanId  = document.getElementById('payLoanId').value;
+  const amount  = Number(document.getElementById('payAmount').value);
   const payDate = document.getElementById('payDate').value;
   if (!loanId || !amount || !payDate) { toast('Fill all required fields', 'error'); return; }
 
   const loan = DB.loans.find(l => String(l.id) === String(loanId));
-  const { interest, penalty, balance } = getAccruedCharges(loan, payDate);
-  const applied = applyPayment(amount, balance, interest, penalty, CFG.payOrder);
-  const balanceAfter = Math.max(0, Math.round((balance - applied.principal) * 100) / 100);
+  const { principalBalance, carriedInterest, currentInterest } = computeCharges(loan, payDate);
+  const applied = applyPaymentGP(amount, principalBalance, carriedInterest, currentInterest);
 
   const id = Date.now().toString();
   const rec = {
     id, loan_id: loanId, borrower_name: loan.borrower_name, date: payDate,
-    amount, penalty_applied: applied.penalty, interest_applied: applied.interest,
-    principal_applied: applied.principal, balance_after: balanceAfter,
+    amount,
+    carried_applied:   applied.carriedApplied,
+    interest_applied:  applied.interestApplied,
+    interest_billed:   applied.interestBilled,
+    principal_applied: applied.principalApplied,
+    balance_after:     applied.balanceAfter,
+    carried_after:     applied.carriedAfter,
     notes: document.getElementById('payNotes').value
   };
   DB.payments.push(rec);
-  sheetsPost({ tab:'Payments', action:'append', row:[id, loanId, loan.borrower_name, payDate, amount, applied.penalty, applied.interest, applied.principal, balanceAfter, rec.notes] });
+  sheetsPost({ tab:'Payments', action:'append', row:[
+    id, loanId, loan.borrower_name, payDate, amount,
+    applied.carriedApplied, applied.interestApplied, applied.interestBilled,
+    applied.principalApplied, applied.balanceAfter, applied.carriedAfter, rec.notes
+  ]});
 
-  if (balanceAfter <= 0) {
+  if (applied.balanceAfter <= 0 && applied.carriedAfter <= 0) {
     const li = DB.loans.findIndex(l => String(l.id) === String(loanId));
     if (li >= 0) {
       DB.loans[li].status = 'closed';
-      sheetsPost({ tab:'Loans', action:'update', id:loanId, row:[null,null,null,null,null,null,null,null,'closed',null] });
+      sheetsPost({ tab:'Loans', action:'update', id:loanId, row:[null,null,null,null,null,null,'closed',null] });
     }
-    toast('Loan fully paid and closed!', 'success');
+    toast('Loan fully settled and closed!', 'success');
   } else {
     toast('Payment recorded!', 'success');
   }
@@ -1190,48 +1201,92 @@ function savePayment() {
   saveLocal(); renderAll(); closeModal('paymentModal');
 }
 
-// ── CONFIG ─────────────────────────────────────────────────────────────────
+// ── CONFIG ─────────────────────────────────────────────────────
 function saveConfig() {
   CFG.sheetsUrl = document.getElementById('sheetsUrl').value.trim();
-  localStorage.setItem('agLendingCFG', JSON.stringify(CFG));
-  toast('Settings saved. Testing connection...', 'success');
+  localStorage.setItem('gpLendingCFG', JSON.stringify(CFG));
+  toast('Saved. Testing connection…', 'success');
   syncAll();
 }
 
-function saveDefaults() {
-  CFG.defaultInterest = Number(document.getElementById('defaultInterest').value);
-  CFG.defaultPenalty = Number(document.getElementById('defaultPenalty').value);
-  CFG.defaultTerm = Number(document.getElementById('defaultTerm').value);
-  CFG.payOrder = document.getElementById('payOrder').value;
-  localStorage.setItem('agLendingCFG', JSON.stringify(CFG));
-  toast('Defaults saved!', 'success');
-}
+// ══════════════════════════════════════════════════════════════
+// LOAN CALCULATOR
+// ══════════════════════════════════════════════════════════════
+let calcMonths = 1;
 
-// ── MOBILE NAV ─────────────────────────────────────────────────────────────
-function toggleSidebar() {
-  const sidebar = document.querySelector('.sidebar');
-  const overlay = document.getElementById('sidebarOverlay');
-  sidebar.classList.toggle('open');
-  overlay.classList.toggle('open');
-}
-
-function showPageMobile(id, btn) {
-  // Reuse existing showPage logic but handle the event differently
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.querySelectorAll('.bottom-nav-btn').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
+function setCalcMonths(n, btn) {
+  calcMonths = n;
+  document.getElementById('calcMonths').value = n;
+  document.querySelectorAll('.month-tab').forEach(t => t.classList.remove('active'));
   if (btn) btn.classList.add('active');
-  // Also sync sidebar highlight
-  document.querySelectorAll('.nav-item').forEach(n => {
-    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'")) {
-      n.classList.add('active');
-    }
-  });
-  renderAll();
+  runCalc();
 }
 
-// ── TOAST ──────────────────────────────────────────────────────────────────
+function runCalc() {
+  const principal       = Number(document.getElementById('calcPrincipal')?.value || 0);
+  const months          = Number(document.getElementById('calcMonths')?.value || calcMonths);
+  const overdueMonths   = Number(document.getElementById('calcOverdueMonths')?.value || 0);
+  const carriedInterest = Number(document.getElementById('calcCarriedInterest')?.value || 0);
+  const resultsEl       = document.getElementById('calcResults');
+  if (!resultsEl) return;
+  if (!principal || principal <= 0) { resultsEl.style.display = 'none'; return; }
+
+  // ── ON-TIME scenario ──────────────────────────────────────
+  // Interest = 8% × original principal × months (flat, not compounding)
+  const onTimeInterest = r2(principal * RATE_NORMAL * months);
+  const onTimeTotal    = r2(principal + carriedInterest + onTimeInterest);
+
+  // ── OVERDUE scenario ──────────────────────────────────────
+  // Normal months at 8%, then overdue months at 10% (replaces, not adds)
+  // "Overdue months" means months past due date at 10% instead of 8%
+  const normalMonths      = Math.max(0, months - overdueMonths);
+  const overdueMonthsUsed = overdueMonths;
+  const normalInterest    = r2(principal * RATE_NORMAL  * normalMonths);
+  const overdueInterest   = r2(principal * RATE_OVERDUE * overdueMonthsUsed);
+  const totalInterest     = r2(normalInterest + overdueInterest);
+  const overdueTotal      = r2(principal + carriedInterest + totalInterest);
+
+  resultsEl.style.display = 'grid';
+  resultsEl.innerHTML = `
+    <div class="calc-scenario">
+      <div class="calc-scenario-header on-time">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px;height:16px"><polyline points="20 6 9 17 4 12"/></svg>
+        <h4>Paid on time</h4>
+      </div>
+      <div class="calc-scenario-body">
+        <div class="calc-row"><span class="calc-lbl">Principal</span><span>${peso(principal)}</span></div>
+        ${carriedInterest > 0 ? `<div class="calc-row"><span class="calc-lbl">Carried unpaid interest</span><span style="color:var(--warning)">${peso(carriedInterest)}</span></div>` : ''}
+        <div class="calc-row"><span class="calc-lbl">Interest (8% × ${months} mo)</span><span style="color:var(--warning)">${peso(onTimeInterest)}</span></div>
+        <div class="calc-row"><span class="calc-lbl" style="font-weight:700">Total to pay</span><span style="color:var(--success)">${peso(onTimeTotal)}</span></div>
+      </div>
+    </div>
+
+    <div class="calc-scenario">
+      <div class="calc-scenario-header overdue">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px;height:16px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <h4>Paid late (${overdueMonths} mo overdue)</h4>
+      </div>
+      <div class="calc-scenario-body">
+        <div class="calc-row"><span class="calc-lbl">Principal</span><span>${peso(principal)}</span></div>
+        ${carriedInterest > 0 ? `<div class="calc-row"><span class="calc-lbl">Carried unpaid interest</span><span style="color:var(--warning)">${peso(carriedInterest)}</span></div>` : ''}
+        ${normalMonths > 0 ? `<div class="calc-row"><span class="calc-lbl">Interest (8% × ${normalMonths} normal mo)</span><span style="color:var(--warning)">${peso(normalInterest)}</span></div>` : ''}
+        ${overdueMonthsUsed > 0 ? `<div class="calc-row"><span class="calc-lbl">Overdue charge (10% × ${overdueMonthsUsed} mo)</span><span style="color:var(--danger)">${peso(overdueInterest)}</span></div>` : ''}
+        <div class="calc-row"><span class="calc-lbl" style="font-weight:700">Total to pay</span><span style="color:var(--danger)">${peso(overdueTotal)}</span></div>
+      </div>
+    </div>
+
+    <div class="card card-body" style="grid-column:1/-1;background:#fafbff;">
+      <p style="font-size:12px;color:var(--text-sec);line-height:1.8;">
+        <strong>Payment order reminder:</strong> When paying, money settles
+        ${carriedInterest > 0 ? `<strong style="color:var(--warning)">carried interest (${peso(carriedInterest)})</strong> first → ` : ''}
+        <strong style="color:var(--warning)">current interest</strong> → <strong style="color:var(--success)">principal</strong>.
+        Any interest not fully covered carries forward and does not compound.
+      </p>
+    </div>
+  `;
+}
+
+// ── TOAST ──────────────────────────────────────────────────────
 function toast(msg, type = '') {
   const t = document.createElement('div');
   t.className = 'toast' + (type ? ' ' + type : '');
