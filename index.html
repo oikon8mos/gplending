@@ -283,6 +283,10 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
         Payments
       </button>
+      <button class="nav-item" onclick="showPage('capital', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Capital
+      </button>
       <button class="nav-item" onclick="showPage('calculator', this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="12" y2="18"/></svg>
         Calculator
@@ -389,6 +393,28 @@
           <table>
             <thead><tr><th>Date</th><th>Borrower</th><th>Amount paid</th><th>→ Carried interest</th><th>→ Current interest</th><th>→ Principal</th><th>Principal balance</th></tr></thead>
             <tbody id="paymentTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CAPITAL -->
+    <div class="page" id="page-capital">
+      <div class="page-header">
+        <div><h2>Capital</h2><p>Track your total lending fund</p></div>
+        <button class="btn btn-primary" onclick="openCapitalModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add capital
+        </button>
+      </div>
+      <!-- Capital summary -->
+      <div class="stat-grid" style="margin-bottom:20px;" id="capitalStats"></div>
+      <div class="card">
+        <div class="card-header"><h3>Capital entries</h3></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Date</th><th>Amount</th><th>Notes</th><th>Actions</th></tr></thead>
+            <tbody id="capitalTable"><tr><td colspan="4"><div class="empty-state"><p>No capital entries yet.</p></div></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -565,9 +591,9 @@ function doPost(e) {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
       Loans
     </button>
-    <button class="bottom-nav-btn" onclick="showPageMobile('calculator', this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/></svg>
-      Calc
+    <button class="bottom-nav-btn" onclick="showPageMobile('capital', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Capital
     </button>
     <button class="bottom-nav-btn" onclick="showPageMobile('config', this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
@@ -577,6 +603,30 @@ function doPost(e) {
 </nav>
 
 <!-- MODALS -->
+
+<!-- Capital modal -->
+<div class="modal-backdrop" id="capitalModal">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-header">
+      <h3 id="capitalModalTitle">Add capital</h3>
+      <button class="modal-close" onclick="closeModal('capitalModal')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="capitalId" />
+      <div class="form-grid">
+        <div class="form-group full"><label>Amount (₱) *</label><input type="number" id="capitalAmount" placeholder="e.g. 50000" step="100" /></div>
+        <div class="form-group"><label>Date *</label><input type="date" id="capitalDate" /></div>
+        <div class="form-group"><label>Notes</label><input type="text" id="capitalNotes" placeholder="e.g. Initial fund, Top-up" /></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('capitalModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveCapital()">Save</button>
+    </div>
+  </div>
+</div>
 
 <!-- Borrower modal -->
 <div class="modal-backdrop" id="borrowerModal">
@@ -678,6 +728,30 @@ function doPost(e) {
   </div>
 </div>
 
+<!-- Capital modal -->
+<div class="modal-backdrop" id="capitalModal">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-header">
+      <h3 id="capitalModalTitle">Add capital</h3>
+      <button class="modal-close" onclick="closeModal('capitalModal')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="capitalId" />
+      <div class="form-grid">
+        <div class="form-group full"><label>Amount (₱) *</label><input type="number" id="capitalAmount" placeholder="e.g. 50000" step="100" /></div>
+        <div class="form-group full"><label>Date *</label><input type="date" id="capitalDate" /></div>
+        <div class="form-group full"><label>Notes</label><input type="text" id="capitalNotes" placeholder="e.g. Initial fund, Additional capital from Galicia" /></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('capitalModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveCapital()">Save</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
@@ -692,7 +766,7 @@ function doPost(e) {
 const RATE_NORMAL  = 0.08; // 8% per month on original principal
 const RATE_OVERDUE = 0.10; // 10% per month on original principal
 
-let DB = { borrowers: [], loans: [], payments: [] };
+let DB = { borrowers: [], loans: [], payments: [], capital: [] };
 let CFG = {
   sheetsUrl: 'https://script.google.com/macros/s/AKfycbxjn6wOKMxJs7XpHOTcY5U5E5FiYTKpvxH-8nMnTEMRffo7WHMoyzMRl3T_j9ntXR-J/exec',
   defaultTerm: 1
@@ -783,10 +857,17 @@ async function syncAll() {
   if (!CFG.sheetsUrl) { toast('No Sheets URL. Go to Settings.', 'error'); return; }
   try {
     toast('Syncing…');
-    const [b, l, p] = await Promise.all([sheetsGet('Borrowers'), sheetsGet('Loans'), sheetsGet('Payments')]);
+    const [b, l, p] = await Promise.all([
+      sheetsGet('Borrowers'), sheetsGet('Loans'), sheetsGet('Payments')
+    ]);
     if (b) DB.borrowers = b.filter(r => r.id);
-    if (l) DB.loans = l.filter(r => r.id);
-    if (p) DB.payments = p.filter(r => r.id);
+    if (l) DB.loans     = l.filter(r => r.id);
+    if (p) DB.payments  = p.filter(r => r.id);
+    // Capital tab is optional — silently skip if it doesn't exist yet
+    try {
+      const c = await sheetsGet('Capital');
+      if (c && Array.isArray(c)) DB.capital = c.filter(r => r.id);
+    } catch(e) { /* Capital tab not set up yet */ }
     saveLocal(); renderAll(); updateSyncStatus('connected');
     toast('Synced!', 'success');
   } catch(e) {
@@ -897,6 +978,7 @@ function renderAll() {
   renderBorrowers();
   renderLoans();
   renderPayments();
+  renderCapital();
   populateLoanDropdowns();
   runCalc();
 }
@@ -911,11 +993,21 @@ function renderDashboard() {
   const totalOutstanding = DB.loans.filter(l => getLoanStatus(l) !== 'closed').reduce((s, l) => s + getTotalDue(l), 0);
   const totalCollected   = DB.payments.reduce((s, p) => s + Number(p.amount || 0), 0);
 
+  // Capital = sum of all entries in DB.capital
+  const totalCapital = DB.capital.reduce((s, c) => s + Number(c.amount || 0), 0);
+  // Remaining capital = total capital minus principal currently deployed in open loans
+  const deployedCapital = DB.loans
+    .filter(l => getLoanStatus(l) !== 'closed')
+    .reduce((s, l) => s + getPrincipalBalance(l.id), 0);
+  const remainingCapital = r2(totalCapital - deployedCapital);
+
   document.getElementById('dashStats').innerHTML = `
     <div class="stat-card accent"><div class="stat-label">Active loans</div><div class="stat-value">${activeLoans.length}</div><div class="stat-sub">${DB.borrowers.length} total borrowers</div></div>
     <div class="stat-card danger"><div class="stat-label">Overdue</div><div class="stat-value">${overdueLoans.length}</div><div class="stat-sub">loans past due date</div></div>
     <div class="stat-card warning"><div class="stat-label">Total outstanding</div><div class="stat-value" style="font-size:18px">${peso(totalOutstanding)}</div><div class="stat-sub">principal + all interest</div></div>
     <div class="stat-card success"><div class="stat-label">Total collected</div><div class="stat-value" style="font-size:18px">${peso(totalCollected)}</div><div class="stat-sub">all payments received</div></div>
+    <div class="stat-card accent"><div class="stat-label">Total capital</div><div class="stat-value" style="font-size:18px">${peso(totalCapital)}</div><div class="stat-sub"><a href="#" onclick="showPageMobile('capital',null)" style="color:var(--gold);font-size:11px;">+ Add capital</a></div></div>
+    <div class="stat-card" style="border-left:3px solid var(--gold)"><div class="stat-label">Remaining capital</div><div class="stat-value" style="font-size:18px;color:${remainingCapital < 0 ? 'var(--danger)' : 'var(--gold)'}">${peso(remainingCapital)}</div><div class="stat-sub">capital not yet lent out</div></div>
   `;
 
   const ot = document.getElementById('overdueTable');
@@ -1201,6 +1293,83 @@ function savePayment() {
   saveLocal(); renderAll(); closeModal('paymentModal');
 }
 
+// ── CAPITAL CRUD ───────────────────────────────────────────────
+function openCapitalModal() {
+  document.getElementById('capitalId').value = '';
+  document.getElementById('capitalAmount').value = '';
+  document.getElementById('capitalDate').value = new Date().toISOString().slice(0,10);
+  document.getElementById('capitalNotes').value = '';
+  document.getElementById('capitalModalTitle').textContent = 'Add capital';
+  openModal('capitalModal');
+}
+
+function editCapital(id) {
+  const c = DB.capital.find(c => String(c.id) === String(id));
+  document.getElementById('capitalId').value = c.id;
+  document.getElementById('capitalAmount').value = c.amount;
+  document.getElementById('capitalDate').value = c.date;
+  document.getElementById('capitalNotes').value = c.notes || '';
+  document.getElementById('capitalModalTitle').textContent = 'Edit capital entry';
+  openModal('capitalModal');
+}
+
+function saveCapital() {
+  const amount = Number(document.getElementById('capitalAmount').value);
+  const date   = document.getElementById('capitalDate').value;
+  if (!amount || !date) { toast('Amount and date are required', 'error'); return; }
+  const id = document.getElementById('capitalId').value || Date.now().toString();
+  const existing = DB.capital.findIndex(c => String(c.id) === String(id));
+  const rec = { id, amount, date, notes: document.getElementById('capitalNotes').value.trim() };
+  if (existing >= 0) {
+    DB.capital[existing] = rec;
+    sheetsPost({ tab:'Capital', action:'update', id, row:[id, amount, date, rec.notes] });
+  } else {
+    DB.capital.push(rec);
+    sheetsPost({ tab:'Capital', action:'append', row:[id, amount, date, rec.notes] });
+  }
+  saveLocal(); renderAll(); closeModal('capitalModal');
+  toast('Capital saved!', 'success');
+}
+
+function deleteCapital(id) {
+  if (!confirm('Delete this capital entry?')) return;
+  DB.capital = DB.capital.filter(c => String(c.id) !== String(id));
+  sheetsPost({ tab:'Capital', action:'delete', id });
+  saveLocal(); renderAll(); toast('Entry deleted.');
+}
+
+function renderCapital() {
+  const statsEl = document.getElementById('capitalStats');
+  const tbody   = document.getElementById('capitalTable');
+  if (!statsEl || !tbody) return;
+
+  const totalCapital = DB.capital.reduce((s, c) => s + Number(c.amount || 0), 0);
+  const deployedCapital = DB.loans
+    .filter(l => getLoanStatus(l) !== 'closed')
+    .reduce((s, l) => s + getPrincipalBalance(l.id), 0);
+  const remainingCapital = r2(totalCapital - deployedCapital);
+
+  statsEl.innerHTML = `
+    <div class="stat-card accent"><div class="stat-label">Total capital</div><div class="stat-value" style="font-size:20px">${peso(totalCapital)}</div><div class="stat-sub">${DB.capital.length} entr${DB.capital.length === 1 ? 'y' : 'ies'}</div></div>
+    <div class="stat-card warning"><div class="stat-label">Deployed (out as loans)</div><div class="stat-value" style="font-size:20px">${peso(deployedCapital)}</div><div class="stat-sub">principal in active/overdue loans</div></div>
+    <div class="stat-card" style="border-left:3px solid var(--gold)"><div class="stat-label">Remaining / Available</div><div class="stat-value" style="font-size:20px;color:${remainingCapital < 0 ? 'var(--danger)' : 'var(--gold)'}">${peso(remainingCapital)}</div><div class="stat-sub">${remainingCapital < 0 ? '⚠ over-deployed' : 'ready to lend'}</div></div>
+  `;
+
+  if (!DB.capital.length) {
+    tbody.innerHTML = '<tr><td colspan="4"><div class="empty-state"><p>No capital entries yet. Add your starting fund.</p></div></td></tr>'; return;
+  }
+  const sorted = [...DB.capital].sort((a, b) => b.date.localeCompare(a.date));
+  tbody.innerHTML = sorted.map(c => `<tr>
+    <td>${c.date}</td>
+    <td><strong style="color:var(--gold)">${peso(c.amount)}</strong></td>
+    <td>${c.notes || '—'}</td>
+    <td><div class="td-actions">
+      <button class="btn btn-ghost" style="padding:5px 10px;font-size:12px" onclick="editCapital('${c.id}')">Edit</button>
+      <button class="btn btn-danger" style="padding:5px 10px;font-size:12px" onclick="deleteCapital('${c.id}')">Delete</button>
+    </div></td>
+  </tr>`).join('');
+}
+
 // ── CONFIG ─────────────────────────────────────────────────────
 function saveConfig() {
   CFG.sheetsUrl = document.getElementById('sheetsUrl').value.trim();
@@ -1284,6 +1453,85 @@ function runCalc() {
       </p>
     </div>
   `;
+}
+
+// ── CAPITAL CRUD ───────────────────────────────────────────────
+function renderCapital() {
+  const tbody = document.getElementById('capitalTable');
+  const statsEl = document.getElementById('capitalStats');
+  if (!tbody) return;
+
+  const totalCapital    = DB.capital.reduce((s, c) => s + Number(c.amount || 0), 0);
+  const deployedCapital = DB.loans
+    .filter(l => getLoanStatus(l) !== 'closed')
+    .reduce((s, l) => s + getPrincipalBalance(l.id), 0);
+  const remaining = r2(totalCapital - deployedCapital);
+
+  if (statsEl) statsEl.innerHTML = `
+    <div class="stat-card accent"><div class="stat-label">Total capital</div><div class="stat-value" style="font-size:20px">${peso(totalCapital)}</div><div class="stat-sub">${DB.capital.length} entr${DB.capital.length === 1 ? 'y' : 'ies'}</div></div>
+    <div class="stat-card warning"><div class="stat-label">Deployed (lent out)</div><div class="stat-value" style="font-size:20px">${peso(deployedCapital)}</div><div class="stat-sub">principal in open loans</div></div>
+    <div class="stat-card" style="border-left:3px solid var(--gold)"><div class="stat-label">Remaining / Available</div><div class="stat-value" style="font-size:20px;color:${remaining < 0 ? 'var(--danger)' : 'var(--gold)'}">${peso(remaining)}</div><div class="stat-sub">not yet lent out</div></div>
+  `;
+
+  if (!DB.capital.length) {
+    tbody.innerHTML = '<tr><td colspan="4"><div class="empty-state"><p>No capital entries yet. Add your starting fund.</p></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = [...DB.capital].reverse().map(c => `<tr>
+    <td>${c.date_added}</td>
+    <td><strong style="color:var(--gold)">${peso(c.amount)}</strong></td>
+    <td>${c.notes || '—'}</td>
+    <td><div class="td-actions">
+      <button class="btn btn-ghost" style="padding:5px 10px;font-size:12px" onclick="editCapital('${c.id}')">Edit</button>
+      <button class="btn btn-danger" style="padding:5px 10px;font-size:12px" onclick="deleteCapital('${c.id}')">Delete</button>
+    </div></td>
+  </tr>`).join('');
+}
+
+function openCapitalModal() {
+  document.getElementById('capitalId').value = '';
+  document.getElementById('capitalAmount').value = '';
+  document.getElementById('capitalDate').value = new Date().toISOString().slice(0,10);
+  document.getElementById('capitalNotes').value = '';
+  document.getElementById('capitalModalTitle').textContent = 'Add capital';
+  openModal('capitalModal');
+}
+
+function editCapital(id) {
+  const c = DB.capital.find(c => String(c.id) === String(id));
+  document.getElementById('capitalId').value = c.id;
+  document.getElementById('capitalAmount').value = c.amount;
+  document.getElementById('capitalDate').value = c.date_added;
+  document.getElementById('capitalNotes').value = c.notes || '';
+  document.getElementById('capitalModalTitle').textContent = 'Edit capital entry';
+  openModal('capitalModal');
+}
+
+function saveCapital() {
+  const amount = Number(document.getElementById('capitalAmount').value);
+  const date   = document.getElementById('capitalDate').value;
+  if (!amount || !date) { toast('Amount and date are required', 'error'); return; }
+  const existingId = document.getElementById('capitalId').value;
+  const id = existingId || Date.now().toString();
+  const rec = { id, amount, date_added: date, notes: document.getElementById('capitalNotes').value.trim() };
+
+  const idx = DB.capital.findIndex(c => String(c.id) === String(id));
+  if (idx >= 0) {
+    DB.capital[idx] = rec;
+    sheetsPost({ tab:'Capital', action:'update', id, row:[id, amount, date, rec.notes] });
+  } else {
+    DB.capital.push(rec);
+    sheetsPost({ tab:'Capital', action:'append', row:[id, amount, date, rec.notes] });
+  }
+  saveLocal(); renderAll(); closeModal('capitalModal');
+  toast('Capital saved!', 'success');
+}
+
+function deleteCapital(id) {
+  if (!confirm('Delete this capital entry?')) return;
+  DB.capital = DB.capital.filter(c => String(c.id) !== String(id));
+  sheetsPost({ tab:'Capital', action:'delete', id });
+  saveLocal(); renderAll(); toast('Entry deleted.');
 }
 
 // ── TOAST ──────────────────────────────────────────────────────
